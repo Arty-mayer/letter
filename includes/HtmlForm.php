@@ -6,6 +6,7 @@ class HtmlForm {
 	public bool $configIsSet;
 	private array $config;
 	private array $classes;
+	private string $htmlForm;
 
 	function __construct( $set = null ) {
 		$this->configIsSet = false;
@@ -51,6 +52,7 @@ class HtmlForm {
 						$out = $out . $key . '=' . $value . '" ';
 					}
 					break;
+				default:
 			}
 		}
 		$out = $out . '>';
@@ -59,13 +61,23 @@ class HtmlForm {
 			$out = $out . $this->constructField($field);
 		}
 
+		$this->htmlForm = $out . '</form>';
+	}
+
+	public function getHTML () {
+		return $this->htmlForm;
 	}
 
 	private function constructField( $field ): string {
+		$validTypes = [
+			'checkbox', 'text', 'number', 'select', 'radio', 'button',
+			'color', 'date', 'datetime-local', 'email', 'file', 'hidden',
+			'image', 'password', 'range', 'reset', 'search', 'submit',
+			'tel', 'time', 'url', 'week', 'month'
+		];
 		if (empty ($field['name']) && empty ($field['id'])) {
 			return '';
 		}
-		$out = '<div class="'.$this->classes['letter-form-group'].'">';
 		$fieldHTML = '<input';
 		foreach ( $field as $key => $value ) {
 			switch ($key){
@@ -74,51 +86,20 @@ class HtmlForm {
 						$fieldHTML = '<label for="'.$field['id'].'">'.$value.'</label>' . $fieldHTML;
 					}
 					break;
-				case 'name':
-				case 'id':
-				case 'value':
-					$fieldHTML = $fieldHTML . ' ' . $key . '="' . $value .'"';
-					break;
 				case 'type':
-					if ($this->checkUpType($value)){
+					if (in_array($value, $validTypes)){
 						$fieldHTML = $fieldHTML . ' type="'.$value.'"';
 					}
 					else{
 						$fieldHTML = $fieldHTML . ' type="text"';
 					}
 					break;
+				default:  $fieldHTML = $fieldHTML . ' ' . $key . '="' . $value .'"';
 			}
+		}
+		return '<div class="'.$this->classes['letter-form-group'].'">' . $fieldHTML .'</div>';
+	}
 
-		}
-	}
-	private function checkUpType( string $value ) {
-		switch ($value){
-			case 'checkbox':
-			case 'text':
-			case 'number':
-			case 'select':
-			case 'radio':
-			case 'button':
-			case 'color':
-			case 'date':
-			case 'datetime-local':
-			case 'email':
-			case 'file':
-			case 'hidden':
-			case 'image':
-			case 'password':
-			case 'range':
-			case 'reset':
-			case 'search':
-			case 'submit':
-			case 'tel':
-			case 'time':
-			case 'url':
-			case 'week':
-			case 'month':
-				return true;
-			default: return false ;
-		}
-	}
+
 
 }
