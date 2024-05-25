@@ -1,0 +1,33 @@
+.letter-set-container {
+    margin: 5px;
+    border: 1px solid gray;
+    padding: 5px;
+    float:left;
+}
+.letter-form-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 10px 20px;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.letter-form-group {
+    display: contents; /* Grid-specific to avoid extra divs */
+}
+
+.letter-form-group label {
+    grid-column: 1;
+    text-align: right;
+    align-self: center;
+}
+
+.letter-form-group input {
+    grid-column: 2;
+}
+
+.letter-button {
+    grid-column: 1 / -1; /* Span the button across all columns */
+    justify-self: center;
+    margin-top: 10px;
+}

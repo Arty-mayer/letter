@@ -76,9 +76,9 @@ class Forms_page {
     send_form(form) {
         var formData = new FormData(form);
         this.todo = formData.get("todo");
-        if (formData.get("todo") == 1) {
+        if (formData.get("todo") === 1) {
             var pbId = "prog_bar_add";
-        } else if (formData.get("todo") == 2 || formData.get("todo") == 3) {
+        } else if (formData.get("todo") === 2 || formData.get("todo") === 3) {
             var pbId = "prog_bar_" + formData.get("id");
         }
 
@@ -112,7 +112,7 @@ class Forms_page {
         }
 
 
-        if (this.todo == 1) {
+        if (this.todo === 1) {
             if (json.error !== "0") {
                 console.log(json.error);
                 return;
@@ -137,7 +137,7 @@ class Forms_page {
             });
         }
 
-        if (this.todo == 2) {
+        if (this.todo === 2) {
             if (this.error !== "0") {
                 let updForm = document.getElementById("form_" + formData.get("id"));
                 let updField = updForm.querySelector('[name = "name"]');
@@ -147,7 +147,7 @@ class Forms_page {
             }
         }
 
-        if (this.todo == 3) {
+        if (this.todo === 3) {
             if (json.error !== "0") {
                 console.log(json.error);
                 return;

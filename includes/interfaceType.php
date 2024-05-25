@@ -6,8 +6,11 @@ namespace letter\includes;
 
 interface interfaceType
 {
-    public static function abc();
+    public function constructSettingsPage();
+	public function ajaxHandler();
+
 }
+
 
 
 

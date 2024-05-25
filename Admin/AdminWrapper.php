@@ -7,15 +7,23 @@ namespace letter\Admin;
  */
 class AdminWrapper
 {
-    private string $currentScreen;
+    private array $currentScreen;
     private mixed $objects;
     private string $out;
 
-    public function __construct($current_screen, $objects = null)
+    public function __construct()
     {
-        $this->objects = $objects;
-        $this->currentScreen = $current_screen;
+		$this->out = '';
+        $this->currentScreen = Admin::$view;
     }
+
+	public function setObjects($obj = null) : bool {
+		if ($obj!= null){
+			$this->objects = $obj;
+			return true;
+		}
+		else {return false;}
+	}
 
     /**
      * Генерирует одну строчку html для таблицы с созданными на сайте формами
@@ -29,7 +37,8 @@ class AdminWrapper
         $form = $form_obj->returnAsArray();
         $class = 'letter\\types\\'.$form['type'];
         if (class_exists($class)) {
-            $type = '<a href="' . admin_url('admin.php?page=letter_forms&form_id='.$form['id']).'" title="Настроить">'.$class::SHOW_NAME.'</a>';
+            $type = '<a href="' . admin_url('admin.php?page=letter_forms&form_id=' .
+                $form['id']).'" title="Настроить">'.$class::SHOW_NAME.'</a>';
             $color = '';
         } else {
             $type = $form['type'] . ' отсутствует';
@@ -93,32 +102,37 @@ class AdminWrapper
         return $out;
     }
 
-    public function construction() : void
-    {
-        switch ($this->currentScreen) {
-            case 'letter_forms':
-                $this->formsPageConstructor();
-                break;
-
-            case 'abc':
-
-                break;
-
-            default:
-                break;
-
-        }
-    }
-
-    private function formsPageConstructor() : void
+    public function formsPageConstructor() : void
     {
         $div_style = 'style="width:auto;  float:left; border: 1px solid gray;  margin:6px; padding: 5px;"';
-        $this->out = '<div id="Forms_page" ><div id="forms_div" ' . $div_style . '><b>Список форм:</b><br><br>' .
+        $this->out = '<div id="forms_page" ><div id="forms_div" ' . $div_style . '><b>Список форм:</b><br><br>' .
             AdminWrapper::formsTableHtml($this->objects['form_list']) .
             '</div><div id="add_form_div" ' . $div_style . '><b>Добавить:</b><br><br>' .
             AdminWrapper::addFormHtml() .
             '</div></div>';
     }
+
+	public function formPageConstructor() : void {
+
+		$this->out = '<div id="form_page">'.$this->objects['Type']->constructSettingsPage().'</div>';
+	}
+/*
+	public function addFormsStyle() : string {
+
+
+		$style = ' <script>
+        var style = document.createElement("style");
+        style.type = "text/css";
+        style.innerHTML = `
+		
+        document.head.appendChild(style);
+    </script>';
+		$this->out = $this->out .' '. $style . ' ';
+		return $style;
+	}
+*/
+
+
 
     public function htmlPrint() : void
     {
@@ -129,6 +143,17 @@ class AdminWrapper
     {
         $this->out = '';
     }
+	public function settingsPageConstructor(): void{
+		$this->out = '<div id="settings_page" > Настройки </div>';
+	}
+
+	public function overviewPageConstructor(): void{
+		$this->out = '<div id="overview_page" >  Здесь будет всякая статистика </div>';
+	}
+	public function defaultPageConstructor(): void{
+		$this->out = '<div id="overview_page" > нет такой страницы =)</div>';
+	}
+
 
 }
 
